@@ -1,10 +1,14 @@
 <?php
 
-namespace Database\Seeders;
-
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use OrderStatusSeeder;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Seeder;
-
+use Database\Seeders\PostSeeder;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\CommentsSeeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Config;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -13,12 +17,12 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+    {
+        // $this->call(UserSeeder::class);
+        // $this->call(PostSeeder::class);
+
+        $this->call(CommentsSeeder::class);
+
     }
 }

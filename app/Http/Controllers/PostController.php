@@ -3,60 +3,91 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\Post;
+use App\Models\User;
+use App\Models\Comment;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $allPosts = [
-            ['id' => 1, 'title' => 'about marketing', 'posted_by' => 'Hagar hosny', 'creation_date' => '2022-10-18'],
-            ['id' => 2, 'title' => 'business vs tech', 'posted_by' => 'Hania Hany', 'creation_date' => '2022-10-9'],
-            ['id' => 3, 'title' => 'branding & strategy', 'posted_by' => 'Radwa Gad', 'creation_date' => '2022-10-18'],
-            ['id' => 4, 'title' => 'business administration', 'posted_by' => 'Gamila Mamdouh', 'creation_date' => '2022-10-9'],
-        ];
 
-        return view('posts.index', [
-            'posts' => $allPosts
-
-        ]);
+        $posts = Post::paginate(8);
+        return view('posts.index', compact('posts'));
     }
 
     public function create()
     {
-        return view('posts.create');
+
+         $allUsers = User::all();
+        return view('posts.create',[
+            'allUsers' => $allUsers
+
+        ])->with('success','Post created successfully!');
     }
 
-    /**
-     *To display the data :..........
-     * @param int $postId;
-     * @return use Illuminate\Http\Response;
-     */
-
-    public function show($postId)
-    {
-    return view(view:'posts.show',data:['id'=>$postId]);
-    }
     public function store(Request $request)
     {
-    return redirect()->route(route:'posts.index');
+        $allUsers = User::all();
+        $request->validate([
+            'title' => 'required|max(20)',
+            'body' => 'required|max(255)',
+            ]);
+            $data = request()->all();
+
+            Post::create([
+                'title' => request()->title,
+                'body' => $data['body'],
+                'user_id' => $data['post_creator'],
+                'published_at' => $data['published_at'],
+            ]);
+              $request->save();
+            return to_route('posts.index')->with('success','Post created successfully!');;
+        // $post = new Post();
+        // $post->title = $request->title;
+        // $post->body = $request->body;
+        // $post->user_id=$request->post_creator;
+        // $post->published_at = $request->published_at;
+
+        // $post->save();
+        // return redirect('posts.index')->with('success','Post created successfully!');
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $postId
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($postId)
+    public function show(Post $post)
     {
-        // $post =Posts::findOrFail($postId);
-        return view('edit', compact('post'));
+        return view('posts.show', compact('post'));
+    }
+
+    public function edit(Post $post)
+
+    {
+        $allUsers = User::all();
+
+        return view('posts.edit', compact('post'));
+    }
+
+    public function update(Post $post, Request $request)
+    {
+        $allUsers = User::all();
+
+        $request->validate([
+            'title' => 'required',
+            'body' => 'required',
+            ]);
+
+        $post->title = $request->title;
+        $post->body = $request->body;
+        $post->user_id=$request->post_creator;
+        $post->published_at = $request->published_at;
+
+        $post->save();
+        return redirect('posts.index')->with('success','Post updated successfully!');
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('posts.index')->with('success','Post deleted successfully!');
+
     }
 }

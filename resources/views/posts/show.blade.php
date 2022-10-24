@@ -1,28 +1,61 @@
-<!DOCTYPE html>
-<html>
-   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>Laravel 8|7|6 CRUD App Example</title>
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-   </head>
+
+{{-- use Carbon\Carbon; --}}
 
 @extends('layouts.app')
 
-@section('title') Index @endsection
 @section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">{{ __('View Post') }}</div>
 
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
-   <body>
-      <div class="container">
-         @yield('content')
-      </div>
-      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" type="text/js"></script>
-   </body>
-</html>
+                    <h2>{{$post->title}}</h2>
 
+                    {{-- <p>Published At: {{date('Y-m-d', strtotime($post->published_at))}}</p> --}}
+                    <p>Published At:  {{\Carbon\Carbon::parse($post->published_at)->format('M d Y')}}</p>
+                    <br>
+                    <div>
+                        {{$post->body}}
+                    </div>
+<table>
+    <thead>
+    <th class="col">#</th>
+    <th class="col">Comment</th>
+    <th class="col">Date</th>
+    <th class="col">Action</th>
+</thead>
 
+<tbody>
+    @foreach ($post->comment as $comment)
+<tr>
+    <td>{{$comment->id}}</td>
+    <td>{{$comment->content}}</td>
+    <td>{{$comment->commented_at}}</td>
+    <td>
+        <a href="# class="btn">
+            <button type="secondary" action='edit'></button>
+        </a>
+        <button type="button" class="btn btn-danger" data-bs-toggle=modal data-bs-target="#examplemodal{{$post['id']}}">Delete</button>
+    </td>
+</tr>
+    @endforeach
+</tbody>
+</table>
+                </div class="text-center">
+                <a href="# class="mt-4 btn">
+                    <button type="success" action='create comment'></button>
+                </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
