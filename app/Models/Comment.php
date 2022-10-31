@@ -9,9 +9,18 @@ class Comment extends Model
 {
     use HasFactory;
 
-
+     protected $guarded =[];
     public function Comment()
     {
-        return $this->morphMany('App\Comment', 'comment');
+        return $this->morphTo();
+    }
+
+    public function post(){
+
+        return $this->belongsTo(Post::class);
+    }
+    public function author(){
+
+        return $this->belongsTo(User::class,'user_id');
     }
 }

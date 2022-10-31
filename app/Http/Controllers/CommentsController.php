@@ -1,30 +1,34 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
-
+use Nette\Utils\Random;
 
 class CommentsController extends Controller
 {
-    public function index(){
-        $allComments = Comment::all();
-   return view('posts.show',['Comments'=>$allComments]);
+    public function index()
+    {
+        // $allComments = Comment::all();
+        //    return view('posts.show',['Comments'=>$allComments]);
     }
 
-    public function store(Request $request){
+    public function storeComment(Post $post, Request $request)
+    {
+
+        request()->validate([
+            'content' => 'required'
+        ]);
         $data = request()->all();
 
+        // $post->comments()->create([]);
         Comment::create([
-            'title' => request()->title,
             'content' => $data['content'],
-            'comment' => $data['comment'],
-            'user_id' => $data['post_creator'],
-            'published_at' => $data['published_at'],
-        ]);
-          $request->save();
-        return to_route('comment.index')->with('success','Comment created successfully!');;
-    }
 
+        ]);
+
+        return back()->with('success', 'Comment created successfully!');;
+    }
 }

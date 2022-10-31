@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->id();
+            $table->id()->nullable();
             $table->text('content');
             $table->morphs('comment');
             $table->datetime('commented_at')->nullable();

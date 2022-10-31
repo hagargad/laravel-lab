@@ -6,7 +6,15 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Create Post') }}</div>
-
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -14,7 +22,7 @@
                         </div>
                     @endif
 
-                    <form action="/post" method="post" >
+                    <form action="{{ route('posts.store') }}" method="post" enctype="multipart/form-data" >
                         @csrf
 
                         <div class="form-group">
@@ -38,6 +46,27 @@
                             <label for="">Publish At</label>
                             <input type="date" name="published_at" class="form-control">
                         </div>
+                        <!--display image-->
+                        <div>
+                            <h1 class="text-center" style="margin-top: 100px">Image Upload</h1>
+
+                            @if ($message = Session::get('success'))
+                                <div class="alert alert-success alert-block">
+                                    <strong>{{$message}}</strong>
+                                </div>
+
+                                <img src="{{ asset('images/'.Session::get('image')) }}" />
+                            @endif
+
+                        </div>
+                        <div class="form-group">
+
+
+                                <input type="file" class="form-control" name="image" />
+
+
+                        </div>
+
 
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

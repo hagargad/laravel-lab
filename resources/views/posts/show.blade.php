@@ -11,12 +11,12 @@
                 <div class="card-header">{{ __('View Post') }}</div>
 
                 <div class="card-body">
-                    @if (session('status'))
+                    {{-- @if (session('status')) --}}
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
-                    @endif
-
+                    {{-- @endif --}}
+                    <img src="{{ asset($post -> file_path) }}" width="300" height="300"/>
                     <h2>{{$post->title}}</h2>
 
                     {{-- <p>Published At: {{date('Y-m-d', strtotime($post->published_at))}}</p> --}}
@@ -25,34 +25,41 @@
                     <div>
                         {{$post->body}}
                     </div>
-<table>
-    <thead>
-    <th class="col">#</th>
-    <th class="col">Comment</th>
-    <th class="col">Date</th>
-    <th class="col">Action</th>
-</thead>
+                   <h3 class="mt-3">Discussion Area</h3>
 
-<tbody>
-    @foreach ($post->comment as $comment)
-<tr>
-    <td>{{$comment->id}}</td>
-    <td>{{$comment->content}}</td>
-    <td>{{$comment->commented_at}}</td>
-    <td>
-        <a href="# class="btn">
-            <button type="secondary" action='edit'></button>
-        </a>
-        <button type="button" class="btn btn-danger" data-bs-toggle=modal data-bs-target="#examplemodal{{$post['id']}}">Delete</button>
-    </td>
-</tr>
-    @endforeach
-</tbody>
-</table>
+                    <section class="col-span-8 col-start-5 mt-10 space-y-6">
+                        @foreach ($post->comments as $comment)
+                         <x-comment :comment="$comment"/>
+                         @endforeach
+                    </section>
+
+
                 </div class="text-center">
-                <a href="# class="mt-4 btn">
-                    <button type="success" action='create comment'></button>
-                </a>
+                <section class="col-span-8 col-start-5 mt-10 space-y-6">
+
+                    {{-- {{ route('posts.comments.storeComment') }} --}}
+                    @auth
+
+
+                <form action="{{ route('posts.comments.storeComment') }}" method="POST"  class="border border-gray-200 p-6 rounded-xl">
+                    @csrf
+                    {{-- @method('PUT') --}}
+                    <div class="form-floating mt-5">
+                        <textarea class="form-control" placeholder="Leave a comment here" name="content"></textarea>
+                        <label for="floatingTextarea">Comments</label>
+                      </div>
+
+
+                    <button type="submit" class="btn btn-primary mt-3" onclick="location.href='{{'submit'}}'">Submit</button>
+
+
+                </form>
+                @else
+               <p class="font-semibold">
+                <a href="/login" class="hover:underline">Login to comment</a>
+               </p>
+                @endauth
+            </section>
                 </div>
             </div>
         </div>

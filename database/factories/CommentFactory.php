@@ -22,8 +22,8 @@ class CommentFactory extends Factory
         return [
             // 'content' => fake()->content,
             'content' => fake()->text(255),
-            'commentable_type'=>Post::class,
-            'commentable_id'=>rand(1,100),
+            'comment_type'=>Post::class,
+            'comment_id'=>rand(1,100),
             'commented_at' => fake()->dateTime(),
             'created_at' => fake()->dateTime(),
             'updated_at' => fake()->dateTime(),
